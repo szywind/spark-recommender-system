@@ -7,7 +7,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by a on 25/07/2017.
   */
-object MoviesRecommond {
+object MoviesRecommend {
   def main(args: Array[String]) {
     if (args.length < 2) {
       System.err.println("Usage : <master> <hdfs dir path>")
@@ -46,7 +46,7 @@ object MoviesRecommond {
     //设置分区数
     val numPartitions = 3
     //将键的数值小于8的作为训练数据
-    val traningData_Rating = ratingsTrain_KV.filter(_._1 < 8)
+    val traningData_Rating = ratingsTrain_KV.filter(_._1 < 6)
       .values//注意，由于原本的数据集是伪键值对形式的，而当做训练数据只需要RDD[Rating]类型的数据，即values集合
       .union(myRatedData_Rating)//使用union操作将我的评分数据加入训练集中，以做为训练的基准
       .repartition(numPartitions)
@@ -59,6 +59,7 @@ object MoviesRecommond {
       .cache()
     val testData_Rating = ratingsTrain_KV.filter(_._1 >= 8)
       .values
+      .repartition(numPartitions)
       .cache()
 
     //打印出用于训练，验证和测试的数据集分别是多少条记录
