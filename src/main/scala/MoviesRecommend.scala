@@ -94,6 +94,8 @@ object MoviesRecommend {
       }
     }
 
+    bestModel.save(sc, args(1) + "/../models/modelCF")
+
     //将最佳模型运用在测试数据集上
     val testDataRnse = rnse(bestModel, testData_Rating, testData_Rating.count())
     println("the best model was trained with rank = " + bestRank + " and lambda = " + bestLambda
